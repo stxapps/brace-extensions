@@ -16,7 +16,8 @@
       "32": "img/logo32.png",
       "48": "img/logo48.png",
       "128": "img/logo128.png"
-    }
+    },
+    "default_title": "Save link to Brace"
   },
   "background": {
     "scripts": ["js/background.js"]

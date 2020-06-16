@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="css/tailwind.css"/>
+</head>
+<body>
+  <div class="py-2 w-64">
+    <div class="py-2 pl-4 cursor-pointer hover:bg-gray-400" id="window-choice-1" data-window-choice="current_tab">
+      <div class="text-lg text-gray-900 font-semibold">Current tab</div>
+      <div class="text-sm text-gray-800">Use the current tab to save a link</div>
+    </div>
+    <div class="py-2 pl-4 cursor-pointer hover:bg-gray-400" id="window-choice-2" data-window-choice="new_tab">
+      <div class="text-lg text-gray-900 font-semibold">New tab</div>
+      <div class="text-sm text-gray-800">Open a new tab to save a link</div>
+    </div>
+    <div class="py-2 pl-4 cursor-pointer hover:bg-gray-400" id="window-choice-3" data-window-choice="new_window">
+      <div class="text-lg text-gray-900 font-semibold">New window</div>
+      <div class="text-sm text-gray-800">Open a new window to save a link</div>
+    </div>
+  </div>
+  <script src="js/browser-polyfill.min.js"></script>
+  <script src="js/popup.js"></script>
+</body>
+</html>
