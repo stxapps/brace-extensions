@@ -70,8 +70,8 @@ async function goToBrace(windowChoice) {
 }
 
 browser.runtime.onInstalled.addListener(async () => {
-  await browser.storage.sync.set({ windowChoice: 'current_tab' });
-  await browser.browserAction.setPopup({ popup: '' });
+  await browser.storage.sync.set({ windowChoice: 'manual' });
+  await browser.browserAction.setPopup({ popup: 'popup.html' });
 
   console.log('onInstalled: set storage and popup succeeded.');
 });
