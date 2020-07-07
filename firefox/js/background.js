@@ -76,6 +76,14 @@ browser.runtime.onInstalled.addListener(async () => {
   console.log('onInstalled: set storage and popup succeeded.');
 });
 
+browser.runtime.onStartup.addListener(async () => {
+  const { windowChoice } = await browser.storage.sync.get('windowChoice');
+  const popupPage = windowChoice === 'manual' ? 'popup.html' : '';
+  await browser.browserAction.setPopup({ popup: popupPage });
+
+  console.log('onStartup: set popup succeeded.');
+});
+
 browser.browserAction.onClicked.addListener(async () => {
 
   const { windowChoice } = await browser.storage.sync.get('windowChoice');
