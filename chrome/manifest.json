@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "name": "Brace",
-  "description": "Save links to visit later",
+  "name": "Brace.to - Bookmark Manager",
+  "description": "Save links to visit later anytime on any devices with full control of your data",
   "version": "0.1.2",
   "icons": {
     "16": "img/logo16.png",
