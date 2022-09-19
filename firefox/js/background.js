@@ -84,8 +84,15 @@ browser.runtime.onStartup.addListener(async () => {
   console.log('onStartup: set popup succeeded.');
 });
 
-browser.browserAction.onClicked.addListener(async () => {
+browser.management.onEnabled.addListener(async () => {
+  const { windowChoice } = await browser.storage.sync.get('windowChoice');
+  const popupPage = windowChoice === 'manual' ? 'popup.html' : '';
+  await browser.browserAction.setPopup({ popup: popupPage });
 
+  console.log('onEnabled: set popup succeeded.');
+});
+
+browser.browserAction.onClicked.addListener(async () => {
   const { windowChoice } = await browser.storage.sync.get('windowChoice');
   await goToBrace(windowChoice);
 });

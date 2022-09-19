@@ -9,7 +9,7 @@
     "48": "img/logo48.png",
     "128": "img/logo128.png"
   },
-  "permissions": ["storage", "activeTab"],
+  "permissions": ["storage", "activeTab", "management"],
   "browser_action": {
     "default_icon": {
       "16": "img/logo16.png",
