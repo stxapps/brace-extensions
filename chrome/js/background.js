@@ -1,9 +1,9 @@
 async function goToBrace(windowChoice) {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   console.log(`windowChoice: ${windowChoice}`);
-  console.log(`Current tab url: ${tab.url}`);
+  console.log(`Current tab: ${tab}`);
 
-  if (!tab.url || tab.url === '') return;
+  if (!tab?.url) return;
 
   let url = new URL(tab.url);
   if (windowChoice === 'new_window') {
@@ -21,7 +21,7 @@ async function goToBrace(windowChoice) {
     await chrome.tabs.create({ url: url });
   } else if (windowChoice === 'new_window') {
     const createInfo = {
-      width: 480, height: 608, type: 'popup', url: url, setSelfAsOpener: true,
+      width: 480, height: 608, type: 'popup', url: url,
     };
     const displayInfo = await chrome.system.display.getInfo({ singleUnified: true });
     const screenInfo = displayInfo[0].bounds;
