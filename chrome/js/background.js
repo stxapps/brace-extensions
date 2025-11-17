@@ -1,5 +1,7 @@
+if (typeof browser === 'undefined') globalThis.browser = chrome;
+
 async function goToBrace(windowChoice) {
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
   console.log(`windowChoice: ${windowChoice}`);
   console.log(`Current tab: ${tab}`);
 
@@ -13,19 +15,19 @@ async function goToBrace(windowChoice) {
 
   if (windowChoice === 'current_tab') {
     try {
-      await chrome.tabs.update({ url: url });
+      await browser.tabs.update({ url: url });
     } catch (e) {
       console.log(`Could not update tab: ${e.message}`);
     }
   } else if (windowChoice === 'new_tab') {
-    await chrome.tabs.create({ url: url });
+    await browser.tabs.create({ url: url });
   } else if (windowChoice === 'new_window') {
     const createInfo = {
       width: 480, height: 608, type: 'popup', url: url,
     };
-    const displayInfo = await chrome.system.display.getInfo({ singleUnified: true });
+    const displayInfo = await browser.system.display.getInfo({ singleUnified: true });
     const screenInfo = displayInfo[0].bounds;
-    const windowInfo = await chrome.windows.getCurrent();
+    const windowInfo = await browser.windows.getCurrent();
     console.log(
       `screen width: ${screenInfo.width}, screen height: ${screenInfo.height}`
     );
@@ -49,54 +51,55 @@ async function goToBrace(windowChoice) {
     createInfo.left = Math.max(0, left);
     console.log(`top: ${createInfo.top}, left: ${createInfo.left}`);
 
-    await chrome.windows.create(createInfo);
+    await browser.windows.create(createInfo);
   } else {
     console.log('Invalid windowChoice');
   }
 }
 
-chrome.runtime.onInstalled.addListener(async (details) => {
-  if (details.reason === chrome.runtime.OnInstalledReason.UPDATE) {
-    const { windowChoice } = await chrome.storage.sync.get('windowChoice');
+browser.runtime.onInstalled.addListener(async (details) => {
+  if (details.reason === 'update') {
+    const { windowChoice } = await browser.storage.sync.get('windowChoice');
     if (['current_tab', 'new_tab', 'new_window', 'manual'].includes(windowChoice)) {
-      await chrome.storage.local.set({ windowChoice: windowChoice });
-      await chrome.storage.sync.clear();
+      // Migrate from sync in old versions to local in new versions
+      await browser.storage.local.set({ windowChoice: windowChoice });
+      await browser.storage.sync.clear();
       console.log('Migrated settings from sync to local storage.');
     }
-  } else if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
-    await chrome.storage.local.set({ windowChoice: 'manual' });
+  } else if (details.reason === 'install') {
+    await browser.storage.local.set({ windowChoice: 'manual' });
     console.log('OnInstalled: set storage succeeded.');
   }
 
-  const { windowChoice } = await chrome.storage.local.get('windowChoice');
+  const { windowChoice } = await browser.storage.local.get('windowChoice');
   const popupPage = windowChoice === 'manual' ? 'popup.html' : '';
-  await chrome.action.setPopup({ popup: popupPage });
+  await browser.action.setPopup({ popup: popupPage });
 
   console.log('onInstalled: set popup succeeded.');
 });
 
-chrome.runtime.onStartup.addListener(async () => {
-  const { windowChoice } = await chrome.storage.local.get('windowChoice');
+browser.runtime.onStartup.addListener(async () => {
+  const { windowChoice } = await browser.storage.local.get('windowChoice');
   const popupPage = windowChoice === 'manual' ? 'popup.html' : '';
-  await chrome.action.setPopup({ popup: popupPage });
+  await browser.action.setPopup({ popup: popupPage });
 
   console.log('onStartup: set popup succeeded.');
 });
 
-chrome.management.onEnabled.addListener(async () => {
-  const { windowChoice } = await chrome.storage.local.get('windowChoice');
+browser.management.onEnabled.addListener(async () => {
+  const { windowChoice } = await browser.storage.local.get('windowChoice');
   const popupPage = windowChoice === 'manual' ? 'popup.html' : '';
-  await chrome.action.setPopup({ popup: popupPage });
+  await browser.action.setPopup({ popup: popupPage });
 
   console.log('onEnabled: set popup succeeded.');
 });
 
-chrome.action.onClicked.addListener(async () => {
-  const { windowChoice } = await chrome.storage.local.get('windowChoice');
+browser.action.onClicked.addListener(async () => {
+  const { windowChoice } = await browser.storage.local.get('windowChoice');
   await goToBrace(windowChoice);
 });
 
-chrome.runtime.onMessage.addListener(async (message, sender, reply) => {
+browser.runtime.onMessage.addListener(async (message, sender, reply) => {
   console.log('Runtime message: ', message);
   if (!message || typeof message !== 'object') {
     console.log('Invalid message');

@@ -1,5 +1,7 @@
+if (typeof browser === 'undefined') globalThis.browser = chrome;
+
 document.addEventListener("DOMContentLoaded", async () => {
-  const { windowChoice } = await chrome.storage.local.get('windowChoice');
+  const { windowChoice } = await browser.storage.local.get('windowChoice');
 
   if (windowChoice === 'current_tab') {
     document.querySelector('#window-choice-1').checked = true;
@@ -18,10 +20,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 const onClick = async (e) => {
   const windowChoice = e.target.value;
-  await chrome.storage.local.set({ windowChoice: windowChoice });
+  await browser.storage.local.set({ windowChoice: windowChoice });
 
   const popupPage = windowChoice === 'manual' ? 'popup.html' : '';
-  await chrome.action.setPopup({ popup: popupPage });
+  await browser.action.setPopup({ popup: popupPage });
 
   console.log(`Updated storage: ${windowChoice} and popupPage: ${popupPage}`);
 };
