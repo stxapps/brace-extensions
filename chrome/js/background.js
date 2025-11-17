@@ -12,54 +12,42 @@ async function goToBrace(windowChoice) {
   url = 'https://brace.to/' + url.toString();
 
   if (windowChoice === 'current_tab') {
-    await chrome.tabs.update({ url: url });
+    try {
+      await chrome.tabs.update({ url: url });
+    } catch (e) {
+      console.log(`Could not update tab: ${e.message}`);
+    }
   } else if (windowChoice === 'new_tab') {
     await chrome.tabs.create({ url: url });
   } else if (windowChoice === 'new_window') {
-
-    const width = 480;
-    const height = 608;
-
     const createInfo = {
-      width: width,
-      height: height,
-      type: 'popup',
-      url: url
+      width: 480, height: 608, type: 'popup', url: url, setSelfAsOpener: true,
     };
-    const updateInfo = {};
-
     const displayInfo = await chrome.system.display.getInfo({ singleUnified: true });
     const screenInfo = displayInfo[0].bounds;
-
     const windowInfo = await chrome.windows.getCurrent();
-    console.log(`screen width: ${screenInfo.width}, screen height: ${screenInfo.height}`);
-    console.log(`window top: ${windowInfo.top}, window left: ${windowInfo.left}`);
-    console.log(`window width: ${windowInfo.width}, window height: ${windowInfo.height}`);
-    console.log(`width: ${width}, height: ${height}`);
+    console.log(
+      `screen width: ${screenInfo.width}, screen height: ${screenInfo.height}`
+    );
+    console.log(
+      `window top: ${windowInfo.top}, window left: ${windowInfo.left}`
+    );
+    console.log(
+      `window width: ${windowInfo.width}, window height: ${windowInfo.height}`
+    );
+    console.log(`width: ${createInfo.width}, height: ${createInfo.height}`);
 
+    // Calculate desired position
     let top = Math.round(windowInfo.top + (windowInfo.height * 0.17));
-    if (top + height < screenInfo.height && top + height < windowInfo.top + windowInfo.height) {
-      createInfo.top = top;
-      updateInfo.top = top;
-    } else {
-      top = windowInfo.top + windowInfo.height - height - 16;
-      if (top + height < screenInfo.height) {
-        createInfo.top = top;
-        updateInfo.top = top;
-      }
-    }
     let left = Math.round(windowInfo.left + (windowInfo.width * 0.57));
-    if (left + width < screenInfo.width && left + width < windowInfo.left + windowInfo.width) {
-      createInfo.left = left;
-      updateInfo.left = left;
-    } else {
-      left = windowInfo.left + windowInfo.width - width - 16;
-      if (left + width < screenInfo.width) {
-        createInfo.left = left;
-        updateInfo.left = left;
-      }
-    }
-    console.log(`top: ${top}, left: ${left}`);
+
+    // Adjust if it overflows the screen
+    top = Math.min(top, screenInfo.height - createInfo.height - 16);
+    left = Math.min(left, screenInfo.width - createInfo.width - 16);
+
+    createInfo.top = Math.max(0, top);
+    createInfo.left = Math.max(0, left);
+    console.log(`top: ${createInfo.top}, left: ${createInfo.left}`);
 
     await chrome.windows.create(createInfo);
   } else {
@@ -67,15 +55,28 @@ async function goToBrace(windowChoice) {
   }
 }
 
-chrome.runtime.onInstalled.addListener(async () => {
-  await chrome.storage.sync.set({ windowChoice: 'manual' });
-  await chrome.action.setPopup({ popup: 'popup.html' });
+chrome.runtime.onInstalled.addListener(async (details) => {
+  if (details.reason === chrome.runtime.OnInstalledReason.UPDATE) {
+    const { windowChoice } = await chrome.storage.sync.get('windowChoice');
+    if (['current_tab', 'new_tab', 'new_window', 'manual'].includes(windowChoice)) {
+      await chrome.storage.local.set({ windowChoice: windowChoice });
+      await chrome.storage.sync.clear();
+      console.log('Migrated settings from sync to local storage.');
+    }
+  } else if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
+    await chrome.storage.local.set({ windowChoice: 'manual' });
+    console.log('OnInstalled: set storage succeeded.');
+  }
 
-  console.log('onInstalled: set storage and popup succeeded.');
+  const { windowChoice } = await chrome.storage.local.get('windowChoice');
+  const popupPage = windowChoice === 'manual' ? 'popup.html' : '';
+  await chrome.action.setPopup({ popup: popupPage });
+
+  console.log('onInstalled: set popup succeeded.');
 });
 
 chrome.runtime.onStartup.addListener(async () => {
-  const { windowChoice } = await chrome.storage.sync.get('windowChoice');
+  const { windowChoice } = await chrome.storage.local.get('windowChoice');
   const popupPage = windowChoice === 'manual' ? 'popup.html' : '';
   await chrome.action.setPopup({ popup: popupPage });
 
@@ -83,7 +84,7 @@ chrome.runtime.onStartup.addListener(async () => {
 });
 
 chrome.management.onEnabled.addListener(async () => {
-  const { windowChoice } = await chrome.storage.sync.get('windowChoice');
+  const { windowChoice } = await chrome.storage.local.get('windowChoice');
   const popupPage = windowChoice === 'manual' ? 'popup.html' : '';
   await chrome.action.setPopup({ popup: popupPage });
 
@@ -91,7 +92,7 @@ chrome.management.onEnabled.addListener(async () => {
 });
 
 chrome.action.onClicked.addListener(async () => {
-  const { windowChoice } = await chrome.storage.sync.get('windowChoice');
+  const { windowChoice } = await chrome.storage.local.get('windowChoice');
   await goToBrace(windowChoice);
 });
 
