@@ -2,8 +2,8 @@ if (typeof browser === 'undefined') globalThis.browser = chrome;
 
 async function goToBrace(windowChoice) {
   const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
-  console.log(`windowChoice: ${windowChoice}`);
-  console.log(`Current tab: ${tab}`);
+  console.log('windowChoice:', windowChoice);
+  console.log('Current tab:', tab);
 
   if (!tab?.url) return;
 

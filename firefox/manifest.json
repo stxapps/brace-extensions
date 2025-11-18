@@ -1,6 +1,6 @@
 {
-  "manifest_version": 2,
-  "name": "Brace",
+  "manifest_version": 3,
+  "name": "Brace.to - Bookmark Manager",
   "description": "Save links to visit later easily, anytime, on any device, with technology that empowers you to truly own your account and data.",
   "version": "0.1.4",
   "icons": {
@@ -9,8 +9,8 @@
     "48": "img/logo48.png",
     "128": "img/logo128.png"
   },
-  "permissions": ["storage", "activeTab", "management"],
-  "browser_action": {
+  "permissions": ["storage", "activeTab", "management", "cookies"],
+  "action": {
     "default_icon": {
       "16": "img/logo16.png",
       "32": "img/logo32.png",
@@ -27,7 +27,8 @@
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "addon@brace.to"
+      "id": "addon@brace.to",
+      "strict_min_version": "109.0"
     }
   }
 }

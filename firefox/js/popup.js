@@ -1,9 +1,6 @@
 const onClick = async (e) => {
   const windowChoice = e.currentTarget.dataset.windowChoice;
-
-  const bgPage = await browser.runtime.getBackgroundPage();
-  await bgPage.goToBrace(windowChoice);
-
+  await browser.runtime.sendMessage({ type: 'GO_TO_BRACE', payload: windowChoice });
   window.close();
 };
 

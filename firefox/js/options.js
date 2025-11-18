@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const { windowChoice } = await browser.storage.sync.get('windowChoice');
+  const { windowChoice } = await browser.storage.local.get('windowChoice');
 
   if (windowChoice === 'current_tab') {
     document.querySelector('#window-choice-1').checked = true;
@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   } else if (windowChoice === 'manual') {
     document.querySelector('#window-choice-4').checked = true;
   } else {
-    throw new Error(`Invalid windowChoice: ${windowChoice}`);
+    console.log(`Invalid windowChoice: ${windowChoice}`);
   }
 
   console.log(`Selected radio button value: ${windowChoice}`);
@@ -18,10 +18,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 const onClick = async (e) => {
   const windowChoice = e.target.value;
-  await browser.storage.sync.set({ windowChoice: windowChoice });
+  await browser.storage.local.set({ windowChoice: windowChoice });
 
   const popupPage = windowChoice === 'manual' ? 'popup.html' : '';
-  await browser.browserAction.setPopup({ popup: popupPage });
+  await browser.action.setPopup({ popup: popupPage });
 
   console.log(`Updated storage: ${windowChoice} and popupPage: ${popupPage}`);
 };
