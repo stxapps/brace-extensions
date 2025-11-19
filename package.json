@@ -1,0 +1,17 @@
+{
+  "name": "brace-extensions",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "build-css": "npx @tailwindcss/cli -i ./src/input.css -o ./src/output.css",
+    "copy-css": "bash bin/copy-css.sh",
+    "build": "npm run build-css && npm run copy-css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.17",
+    "tailwindcss": "^4.1.17"
+  }
+}

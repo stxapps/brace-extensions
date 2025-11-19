@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+@supports (font-variation-settings: normal) {
+  @font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    font-named-instance: 'Regular';
+    src: url("../fonts/InterVariable.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: 'Inter';
+    font-style: italic;
+    font-weight: 100 900;
+    font-display: swap;
+    font-named-instance: 'Italic';
+    src: url("../fonts/InterVariable-italic.woff2") format("woff2");
+  }
+}
