@@ -4,10 +4,12 @@
   "description": "Save links to visit later easily, anytime, on any device, with technology that empowers you to truly own your account and data.",
   "version": "0.0.0",
   "icons": {
-    "16": "img/logo16.png",
-    "32": "img/logo32.png",
     "48": "img/logo48.png",
-    "128": "img/logo128.png"
+    "64": "img/logo64.png",
+    "96": "img/logo96.png",
+    "128": "img/logo128.png",
+    "256": "img/logo256.png",
+    "512": "img/logo512.png"
   },
   "permissions": ["storage", "activeTab", "management"],
   "action": {
