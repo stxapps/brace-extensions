@@ -57,6 +57,12 @@ async function goToBrace(windowChoice) {
   }
 }
 
+const updatePopup = async () => {
+  const { windowChoice } = await browser.storage.local.get('windowChoice');
+  const popupPage = windowChoice === 'manual' ? 'popup.html' : '';
+  await browser.action.setPopup({ popup: popupPage });
+};
+
 browser.runtime.onInstalled.addListener(async (details) => {
   if (details.reason === 'update') {
     const { windowChoice } = await browser.storage.sync.get('windowChoice');
@@ -71,26 +77,17 @@ browser.runtime.onInstalled.addListener(async (details) => {
     console.log('OnInstalled: set storage succeeded.');
   }
 
-  const { windowChoice } = await browser.storage.local.get('windowChoice');
-  const popupPage = windowChoice === 'manual' ? 'popup.html' : '';
-  await browser.action.setPopup({ popup: popupPage });
-
+  await updatePopup();
   console.log('onInstalled: set popup succeeded.');
 });
 
 browser.runtime.onStartup.addListener(async () => {
-  const { windowChoice } = await browser.storage.local.get('windowChoice');
-  const popupPage = windowChoice === 'manual' ? 'popup.html' : '';
-  await browser.action.setPopup({ popup: popupPage });
-
+  await updatePopup();
   console.log('onStartup: set popup succeeded.');
 });
 
 browser.management.onEnabled.addListener(async () => {
-  const { windowChoice } = await browser.storage.local.get('windowChoice');
-  const popupPage = windowChoice === 'manual' ? 'popup.html' : '';
-  await browser.action.setPopup({ popup: popupPage });
-
+  await updatePopup();
   console.log('onEnabled: set popup succeeded.');
 });
 

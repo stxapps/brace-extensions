@@ -5,6 +5,12 @@
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
+@layer base {
+  :root {
+    color-scheme: light dark;
+  }
+}
+
 @supports (font-variation-settings: normal) {
   @font-face {
     font-family: 'Inter';

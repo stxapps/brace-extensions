@@ -199,6 +199,9 @@
   .bg-white {
     background-color: var(--color-white);
   }
+  .px-3\.5 {
+    padding-inline: calc(var(--spacing) * 3.5);
+  }
   .px-5 {
     padding-inline: calc(var(--spacing) * 5);
   }
@@ -282,6 +285,11 @@
         }
       }
     }
+  }
+}
+@layer base {
+  :root {
+    color-scheme: light dark;
   }
 }
 @supports (font-variation-settings: normal) {
