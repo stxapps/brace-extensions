@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Brace.to - Bookmark Manager",
   "description": "Save links to visit later easily, anytime, on any device, with technology that empowers you to truly own your account and data.",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "minimum_chrome_version": "93",
   "icons": {
     "16": "img/logo16.png",
