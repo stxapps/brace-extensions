@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Brace.to - Bookmark Manager",
-  "description": "Save links to visit later easily, anytime, on any device, with technology that empowers you to truly own your account and data.",
-  "version": "0.0.0",
+  "name": "Brace.to for Safari",
+  "description": "Save links to visit later easily, anytime, on any device, with you truly owning your account and data.",
+  "version": "0.1.0",
   "icons": {
     "48": "img/logo48.png",
     "64": "img/logo64.png",
@@ -11,7 +11,7 @@
     "256": "img/logo256.png",
     "512": "img/logo512.png"
   },
-  "permissions": ["storage", "activeTab", "management"],
+  "permissions": ["storage", "activeTab"],
   "action": {
     "default_icon": {
       "any": "img/logo-safari.svg"
